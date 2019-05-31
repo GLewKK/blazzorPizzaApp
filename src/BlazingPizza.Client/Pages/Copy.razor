@@ -1,0 +1,112 @@
+﻿@page "/takePizza"
+
+@using BlazzingPizza.Client
+@using BlazingPizza.Shared.CoreItems
+@inject StateOfOrder StateOfOrder
+
+
+    <div class="main">
+        <h2>Welcome to pizza Creator</h2>
+        @if (StateOfOrder.IsTakenDough)
+        {
+            <h1>You selected: @StateOfOrder.SelectedDough</h1>
+        }
+        else
+        {
+            <div class="dialog-container">
+                <div class="dialog">
+                    <div class="dialog-title">
+                        <h3>Please Select Dough </h3>
+                    </div>
+                    <div class="dialog-body">
+                        @foreach (var doughFactory in StateOfOrder.DoughtFactories)
+                        {
+                            var dough = doughFactory.GetDought();
+                            <div class="image-container" style="background-image: url('img/dough/flatbreadcrust-dough.jpg')"></div>
+                            <button onclick="@(() => StateOfOrder.SelectDough(dough))">Select @dough.DoughtType</button>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+        }
+
+        @if (StateOfOrder.IsSelectedCheese.HasValue)
+        {
+            @if (StateOfOrder.IsSelectedCheese.Value)
+            {
+                <h1>You selected: @StateOfOrder.SelectedCheese</h1>
+            }
+            else
+            {
+                <h3>Please Select Cheese </h3>
+
+                foreach (var cheeseFactory in StateOfOrder.CheeseFactories)
+                {
+                    var cheese = cheeseFactory.GetCheese();
+
+                    <button onclick="@(() => StateOfOrder.SelectCheese(cheese))">Select @cheese.CheeseType</button>
+                }
+            }
+        }
+
+        @if (StateOfOrder.IsSelectedSausage.HasValue)
+        {
+            @if (StateOfOrder.IsSelectedSausage.Value)
+            {
+                <h1>Done!</h1>
+
+            }
+            else
+            {
+                foreach (var decorator in StateOfOrder.SausageDecorators)
+                {
+                    <button onclick="@(() => StateOfOrder.ApplySausage(decorator))">@(decorator is AddSausage ? "+" : "-")</button>
+                }
+                <h3>Please Select Sausage </h3>
+                foreach (var sausageFactory in StateOfOrder.SausageFactories)
+                {
+                    var sausage = sausageFactory.GetSausage();
+
+                    <button onclick="@(() => StateOfOrder.SelectSausage(sausage))">@sausage.SausageType</button>
+                }
+
+                <button onclick="@(() => StateOfOrder.FinishSausageSelection())">Apply</button>
+            }
+        }
+
+        @if (StateOfOrder.IsPizzaReady.HasValue)
+        {
+            @if (StateOfOrder.IsPizzaReady.Value)
+            {
+                <h3>Your Pizza look like:</h3>
+                <p>@StateOfOrder.Pizza.CheeseType.CheeseType</p>
+                <p>@StateOfOrder.Pizza.CheeseType.Description</p>
+                <p>@StateOfOrder.Pizza.DoughtType.DoughtType</p>
+                <p>@StateOfOrder.Pizza.DoughtType.Description</p>
+
+                @foreach (var item in StateOfOrder.Pizza.SausageTypeList.Sausages)
+                {
+                    <p>@item.SausageType</p>
+                    <p>@item.Description</p>
+                }
+            }
+            else
+            {
+                <h3>Your Pizza is Ready</h3>
+                <button onclick="@StateOfOrder.GetPizza">Get the Pizza</button>
+            }
+        }
+    </div>
+
+@functions{
+
+    protected override void OnInit()
+    {
+        StateOfOrder.Builder.CreateNewPizza();
+    }
+
+}
+
+
+

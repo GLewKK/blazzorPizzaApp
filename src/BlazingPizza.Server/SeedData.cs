@@ -183,10 +183,75 @@
                     BasePrice = 9.99m,
                     ImageUrl = "img/pizzas/margherita.jpg",
                 },
+                new PizzaSpecial()
+                {
+                    Id = 9,
+                    Name = "test",
+                    Description = "test",
+                    BasePrice = 9.99m,
+                    ImageUrl = "img/pizzas/margherita.jpg",
+                },
+            };
+
+            var dbDoughs = new DbDough[]
+            {
+                new DbDough
+                {
+                    Name = "Thin Crust",
+                    Description = "Thinnest Dough in restaurant",
+                    Cost = 7,
+                    ImgSrc = "img/dough/Thin-Crust-Pizza-Dough.jpg"
+                },
+                new DbDough
+                {
+                    Name = "Flat Bread Crust",
+                    Description = "It is pretty flat",
+                    Cost = 6,
+                    ImgSrc = "img/dough/flatbreadcrust-dough.jpg"
+                }
+            };
+
+            var dbCheese = new DbCheese[]
+            {
+                new DbCheese
+                {
+                    Name = "Mozzarella Cheese",
+                    Description = "It is from italy",
+                    Cost = 3
+                },
+                new DbCheese
+                {
+                    Name = "Cheddar Chesse",
+                    Description = "Just Cheddar Chesse",
+                    Cost = 4
+                }
+            };
+
+            var dbSausage = new DbSausage[]
+            {
+                new DbSausage
+                {
+                    Name = "Kielbasa Sausage",
+                    Description = "Kielbasa",
+                    Cost = 8
+                },
+                new DbSausage
+                {
+                    Name = "Italian Sausage",
+                    Description = "It is really import from Italy",
+                    Cost = 10
+                }
             };
 
             db.Toppings.AddRange(toppings);
             db.Specials.AddRange(specials);
+
+            db.SaveChanges();
+
+            db.Doughs.AddRange(dbDoughs);
+            db.Cheeses.AddRange(dbCheese);
+            db.Sausages.AddRange(dbSausage);
+
             db.SaveChanges();
         }
     }

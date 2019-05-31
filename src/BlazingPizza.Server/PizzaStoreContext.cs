@@ -21,6 +21,13 @@ namespace BlazingPizza.Server
 
         public DbSet<Topping> Toppings { get; set; }
 
+        public DbSet<DbDough> Doughs { get; set; }
+
+        public DbSet<DbCheese> Cheeses { get; set; }
+
+        public DbSet<DbSausage> Sausages { get; set; }
+        public DbSet<FullySuppliedPizza> FullySuppliedPizzas { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Configuring a many-to-many special -> topping relationship that is friendly for serialisation
@@ -30,6 +37,10 @@ namespace BlazingPizza.Server
 
             // Inline the Lat-Long pairs in Order rather than having a FK to another table
             modelBuilder.Entity<Order>().OwnsOne(o => o.DeliveryLocation);
+
+            modelBuilder.Entity<PizzaSausages>().HasKey(pst => new { pst.FullySuppliedPizzaId, pst.SausageId });
+            modelBuilder.Entity<PizzaSausages>().HasOne<FullySuppliedPizza>().WithMany(ps => ps.SausageList);
+            modelBuilder.Entity<PizzaSausages>().HasOne(pst => pst.Sausage).WithMany();
         }
     }
 }

@@ -673,3 +673,9 @@ input[type=range] {
         transform: translateX(500px);
     }
 }
+.image-container {
+    height: 10rem;
+    position: relative;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
