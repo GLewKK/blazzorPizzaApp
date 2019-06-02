@@ -1,0 +1,41 @@
+﻿@using BlazingPizza.Shared.CoreItems
+@inject HttpClient HttpClient
+
+
+
+<div class="dialog-container">
+        <div class="dialog">
+            <div class="dialog-title">
+                <h3>Please Select Dough </h3>
+            </div>
+            <div class="dialog-body">
+                @foreach (var item in factoryList)
+                {
+                    var entity = item.GetEntity();
+                    <div class="image-container" style="background-image: url('@entity.ImgSrc')"></div>
+                    <button onclick="@(() => OnConfirm.InvokeAsync(entity))">@entity.Name</button>
+                }
+            </div>
+        </div>
+    </div>
+
+
+
+@functions {
+    List<Topping> toppings { get; set; }
+
+    [Parameter] List<AbstractFactory> factoryList { get; set; }
+    [Parameter] EventCallback OnCancel { get; set; }
+    [Parameter] EventCallback<BaseEntity> OnConfirm { get; set; }
+
+    protected async override Task OnInitAsync()
+    {
+        toppings = await HttpClient.GetJsonAsync<List<Topping>>("toppings");
+    }
+
+    void ToppingSelected(UIChangeEventArgs e)
+    {
+
+    }
+
+}

@@ -13,11 +13,11 @@ namespace BlazzingPizza.Client
         public Pizza Pizza { get; set; } = new Pizza();
         public MyPizzaBuilder Builder { get; private set; } = new MyPizzaBuilder();
 
-        public Dought Dought { get; set; }
+        public Dough Dought { get; set; }
 
         public bool ShowError { get; set; } = false;
 
-        public bool IsTakenDough { get; set; } = false;
+        public bool? IsTakenDough { get; set; } = null;
 
         public string SelectedDough { get; set; }
 
@@ -33,7 +33,7 @@ namespace BlazzingPizza.Client
 
         public SausageDecorator SelectedDecorator { get; set; }
 
-        public List<DoughtFactory> DoughtFactories { get; set; } = new List<DoughtFactory>
+        public List<AbstractFactory> DoughtFactories { get; set; } = new List<AbstractFactory>
         {
             new FlatBreadFactory(),
             new ThinCrustFactory()
@@ -57,13 +57,13 @@ namespace BlazzingPizza.Client
             new RemoveSausage()
         };
 
-        public void SelectDough(Dought dought)
+        public void SelectDough(BaseEntity dought)
         {
             try
             {
                 Builder.PrepareDough(dought);
                 IsTakenDough = true;
-                SelectedDough = dought.DoughtType;
+                SelectedDough = dought.Description;
 
                 IsSelectedCheese = false;
             }
@@ -79,7 +79,7 @@ namespace BlazzingPizza.Client
             {
                 Builder.ApplyCheese(cheese);
                 IsSelectedCheese = true;
-                SelectedCheese = cheese.CheeseType;
+                SelectedCheese = cheese.Name;
 
                 IsSelectedSausage = false;
             }

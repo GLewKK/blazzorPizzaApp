@@ -2,34 +2,33 @@
 
 @using BlazzingPizza.Client
 @using BlazingPizza.Shared.CoreItems
+@using System.Diagnostics
 @inject StateOfOrder StateOfOrder
 
 
     <div class="main">
         <h2>Welcome to pizza Creator</h2>
-        @if (StateOfOrder.IsTakenDough)
+        @if (StateOfOrder.IsTakenDough.HasValue)
         {
-            <h1>You selected: @StateOfOrder.SelectedDough</h1>
+            @if (StateOfOrder.IsTakenDough.Value)
+            {
+                <h1>You selected: @StateOfOrder.SelectedDough</h1>
+            }
+            else
+            {
+                <TemplatedDialog Show="@StateOfOrder.IsTakenDough.Value.Equals(false)">
+                    <SelectDoughDialog factoryList="@StateOfOrder.DoughtFactories"
+                                       OnConfirm="@SelectDough">
+                    </SelectDoughDialog>
+                </TemplatedDialog>
+
+            }
         }
         else
         {
-            <div class="dialog-container">
-                <div class="dialog">
-                    <div class="dialog-title">
-                        <h3>Please Select Dough </h3>
-                    </div>
-                    <div class="dialog-body">
-                        @foreach (var doughFactory in StateOfOrder.DoughtFactories)
-                        {
-                            var dough = doughFactory.GetDought();
-                            <div class="image-container" style="background-image: url('img/dough/flatbreadcrust-dough.jpg')"></div>
-                            <button onclick="@(() => StateOfOrder.SelectDough(dough))">Select @dough.DoughtType</button>
-                        }
-                    </div>
-                </div>
-            </div>
-            
+            <button onclick="@GetStarted">Get Started</button>
         }
+
 
         @if (StateOfOrder.IsSelectedCheese.HasValue)
         {
@@ -45,7 +44,7 @@
                 {
                     var cheese = cheeseFactory.GetCheese();
 
-                    <button onclick="@(() => StateOfOrder.SelectCheese(cheese))">Select @cheese.CheeseType</button>
+                    <button onclick="@(() => StateOfOrder.SelectCheese(cheese))">Select @cheese.Name</button>
                 }
             }
         }
@@ -68,7 +67,7 @@
                 {
                     var sausage = sausageFactory.GetSausage();
 
-                    <button onclick="@(() => StateOfOrder.SelectSausage(sausage))">@sausage.SausageType</button>
+                    <button onclick="@(() => StateOfOrder.SelectSausage(sausage))">@sausage.Name</button>
                 }
 
                 <button onclick="@(() => StateOfOrder.FinishSausageSelection())">Apply</button>
@@ -80,14 +79,14 @@
             @if (StateOfOrder.IsPizzaReady.Value)
             {
                 <h3>Your Pizza look like:</h3>
-                <p>@StateOfOrder.Pizza.CheeseType.CheeseType</p>
+                <p>@StateOfOrder.Pizza.CheeseType.Name</p>
                 <p>@StateOfOrder.Pizza.CheeseType.Description</p>
-                <p>@StateOfOrder.Pizza.DoughtType.DoughtType</p>
-                <p>@StateOfOrder.Pizza.DoughtType.Description</p>
+                <p>@StateOfOrder.Pizza.DoughType.Name</p>
+                <p>@StateOfOrder.Pizza.DoughType.Description</p>
 
                 @foreach (var item in StateOfOrder.Pizza.SausageTypeList.Sausages)
                 {
-                    <p>@item.SausageType</p>
+                    <p>@item.Name</p>
                     <p>@item.Description</p>
                 }
             }
@@ -106,6 +105,16 @@
         StateOfOrder.Builder.CreateNewPizza();
     }
 
+    void SelectDough(BaseEntity entity)
+    {
+        Debug.WriteLine("Entity Description");
+        Debug.WriteLine(entity.Description);
+        StateOfOrder.SelectDough(entity);
+    }
+    void GetStarted()
+    {
+        StateOfOrder.IsTakenDough = false;
+    }
 }
 
 

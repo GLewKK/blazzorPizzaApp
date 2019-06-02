@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Components;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,7 +11,7 @@ namespace BlazingPizza.Shared.CoreItems
 {
     class CoreImplementation
     {
-
+        
         static void Main(string[] args)
         {
             MyPizzaBuilder builder = new MyPizzaBuilder();
@@ -35,7 +38,7 @@ namespace BlazingPizza.Shared.CoreItems
     //Pizza
     public class Pizza
     {
-        public Dought DoughtType { get; set; } //factory
+        public BaseEntity DoughType { get; set; } //factory
 
         public Size Size { get; set; }
 
@@ -59,41 +62,41 @@ namespace BlazingPizza.Shared.CoreItems
 
     public abstract class BaseEntity
     {
+        public abstract string Name { get; set; }
         public abstract string Description { get; set; }
         public abstract decimal Price { get; set; }
-    }
-
-    #region Dought Factory
-    public abstract class Dought : BaseEntity
-    {
-        public abstract string DoughtType { get; set; }
         public abstract string ImgSrc { get; set; }
     }
 
-    public class ThinCrust : Dought
+    #region Dought Factory
+    public abstract class Dough : BaseEntity
     {
-        private string _doughtType;
+    }
+
+    public class ThinCrust : Dough
+    {
+        private string _name;
         private string _description;
         private decimal _price;
         private string _imgsrc;
 
-        public ThinCrust(string doughtType, string description, decimal price, string src)
+        public ThinCrust(string name, string description, decimal price, string src)
         {
-            _doughtType = doughtType;
+            _name = name;
             _description = description;
             _price = price;
             _imgsrc = src;
         }
 
-        public override string DoughtType
+        public override string Name
         {
             get
             {
-                return _doughtType;
+                return _name;
             }
             set
             {
-                _doughtType = value;
+                _name = value;
             }
         }
         public override string Description
@@ -125,29 +128,29 @@ namespace BlazingPizza.Shared.CoreItems
         }
     }
 
-    public class FlatBreadCrust : Dought
+    public class FlatBreadCrust : Dough
     {
-        private string _doughtType;
+        private string _name;
         private string _description;
         private decimal _price;
         private string _imgsrc;
 
-        public FlatBreadCrust(string doughtType, string description, decimal price, string src)
+        public FlatBreadCrust(string name, string description, decimal price, string src)
         {
-            _doughtType = doughtType;
+            _name = name;
             _description = description;
             _price = price;
             _imgsrc = src;
         }
-        public override string DoughtType
+        public override string Name
         {
             get
             {
-                return _doughtType;
+                return _name;
             }
             set
             {
-                _doughtType = value;
+                _name = value;
             }
         }
         public override string Description
@@ -179,23 +182,44 @@ namespace BlazingPizza.Shared.CoreItems
         }
     }
 
-    public abstract class DoughtFactory
+    public abstract class AbstractFactory
     {
-        public abstract Dought GetDought();
+        
+
+        public abstract BaseEntity GetEntity(); 
+    }
+    public abstract class DoughtFactory : AbstractFactory
+    {
+        
+        public abstract Dough GetDought();
     }
     public class ThinCrustFactory : DoughtFactory
     {
-        public override Dought GetDought()
+        public override Dough GetDought()
         {
             // din baza se scot datele
-            return new ThinCrust("Thin Crust", "Thinnest Crust", 12, "~/Images/Dough/Thin-Crust-Pizza-Dough.jpg");
+            return new ThinCrust("Thin Crust", "Thinnest Crust", 12, "~/img/Dough/Thin-Crust-Pizza-Dough.jpg");
+        }
+
+        public override BaseEntity GetEntity()
+        {
+            return new ThinCrust("Thin Crust", "Thinnest Crust", 12, "~/img/Dough/Thin-Crust-Pizza-Dough.jpg");
         }
     }
     public class FlatBreadFactory : DoughtFactory
     {
-        public override Dought GetDought()
+
+        public override Dough GetDought()
         {
-            return new FlatBreadCrust("Flat Bread", "Very flat..", 15, "~/Images/Dough/flatbreadcrust-dough.jpg");
+            //var asd = _client.GetJsonAsync<DbDough>("doughs/1");
+            Debug.WriteLine("Testam API");
+            //Debug.WriteLine(asd.Result.Name);
+            return new FlatBreadCrust("Flat Bread", "Very flat..", 15, "~/img/Dough/flatbreadcrust-dough.jpg");
+        }
+
+        public override BaseEntity GetEntity()
+        {
+            return new FlatBreadCrust("Flat Bread", "Very flat..", 15, "~/img/Dough/flatbreadcrust-dough.jpg");
         }
     }
 
@@ -204,30 +228,31 @@ namespace BlazingPizza.Shared.CoreItems
     #region Cheese Factory
     public abstract class Cheese : BaseEntity
     {
-        public abstract string CheeseType { get; set; }
     }
 
     public class MozzarellaCheese : Cheese
     {
-        private string _cheeseType;
+        private string _name;
         private string _description;
         private decimal _price;
+        private string _imgSrc;
 
-        public MozzarellaCheese(string cheeseType, string description, decimal price)
+        public MozzarellaCheese(string cheeseType, string description, decimal price, string imgSrc)
         {
-            _cheeseType = cheeseType;
+            _name = cheeseType;
             _description = description;
             _price = price;
+            _imgSrc = imgSrc;
         }
-        public override string CheeseType
+        public override string Name
         {
             get
             {
-                return _cheeseType;
+                return _name;
             }
             set
             {
-                _cheeseType = value;
+                _name = value;
             }
         }
         public override string Description
@@ -250,30 +275,45 @@ namespace BlazingPizza.Shared.CoreItems
             set
             {
                 _price = value;
+            }
+        }
+
+        public override string ImgSrc
+        {
+            get
+            {
+                return _imgSrc;
+            }
+            set
+            {
+                _imgSrc = value;
             }
         }
     }
     public class CheddarChesse : Cheese
     {
-        private string _cheeseType;
+        private string _name;
         private string _description;
         private decimal _price;
+        private string _imgSrc;
 
-        public CheddarChesse(string cheeseType, string description, decimal price)
+
+        public CheddarChesse(string cheeseType, string description, decimal price, string imgSrc)
         {
-            _cheeseType = cheeseType;
+            _name = cheeseType;
             _description = description;
             _price = price;
+            _imgSrc = imgSrc;
         }
-        public override string CheeseType
+        public override string Name
         {
             get
             {
-                return _cheeseType;
+                return _name;
             }
             set
             {
-                _cheeseType = value;
+                _name = value;
             }
         }
         public override string Description
@@ -298,9 +338,20 @@ namespace BlazingPizza.Shared.CoreItems
                 _price = value;
             }
         }
+        public override string ImgSrc
+        {
+            get
+            {
+                return _imgSrc;
+            }
+            set
+            {
+                _imgSrc = value;
+            }
+        }
     }
 
-    public abstract class CheeseFactory
+    public abstract class CheeseFactory : AbstractFactory
     {
         public abstract Cheese GetCheese();
     }
@@ -308,14 +359,24 @@ namespace BlazingPizza.Shared.CoreItems
     {
         public override Cheese GetCheese()
         {
-            return new MozzarellaCheese("Mozzarella", "Its mozzarella cheese", 8);
+            return new MozzarellaCheese("Mozzarella", "Its mozzarella cheese", 8, "");
+        }
+
+        public override BaseEntity GetEntity()
+        {
+            return new MozzarellaCheese("Mozzarella", "Its mozzarella cheese", 8, "");
         }
     }
     public class CheddarChesseFactory : CheeseFactory
     {
         public override Cheese GetCheese()
         {
-            return new CheddarChesse("Cheddar Chesse", "Description", 9);
+            return new CheddarChesse("Cheddar Chesse", "Description", 9, "");
+        }
+
+        public override BaseEntity GetEntity()
+        {
+            return new CheddarChesse("Cheddar Chesse", "Description", 9, "");
         }
     }
     #endregion
@@ -323,30 +384,31 @@ namespace BlazingPizza.Shared.CoreItems
     #region Sausage Factory
     public abstract class Sausage : BaseEntity
     {
-        public abstract string SausageType { get; set; }
     }
 
     public class KielbasaSausage : Sausage
     {
-        private string _sausageType;
+        private string _name;
         private string _description;
         private decimal _price;
+        private string _imgSrc;
 
-        public KielbasaSausage(string sausageType, string description, decimal price)
+        public KielbasaSausage(string sausageType, string description, decimal price, string imgSrc)
         {
-            _sausageType = sausageType;
+            _name = sausageType;
             _description = description;
             _price = price;
+            _imgSrc = imgSrc;
         }
-        public override string SausageType
+        public override string Name
         {
             get
             {
-                return _sausageType;
+                return _name;
             }
             set
             {
-                _sausageType = value;
+                _name = value;
             }
         }
         public override string Description
@@ -369,6 +431,17 @@ namespace BlazingPizza.Shared.CoreItems
             set
             {
                 _price = value;
+            }
+        }
+        public override string ImgSrc
+        {
+            get
+            {
+                return _imgSrc;
+            }
+            set
+            {
+                _imgSrc = value;
             }
         }
 
@@ -376,25 +449,28 @@ namespace BlazingPizza.Shared.CoreItems
     public class ItalianSausage : Sausage
     {
 
-        private string _sausageType;
+        private string _name;
         private string _description;
         private decimal _price;
+        private string _imgSrc;
 
-        public ItalianSausage(string sausageType, string description, decimal price)
+
+        public ItalianSausage(string sausageType, string description, decimal price, string imgSrc)
         {
-            _sausageType = sausageType;
+            _name = sausageType;
             _description = description;
             _price = price;
+            _imgSrc = imgSrc;
         }
-        public override string SausageType
+        public override string Name
         {
             get
             {
-                return _sausageType;
+                return _name;
             }
             set
             {
-                _sausageType = value;
+                _name = value;
             }
         }
         public override string Description
@@ -419,25 +495,46 @@ namespace BlazingPizza.Shared.CoreItems
                 _price = value;
             }
         }
+        public override string ImgSrc
+        {
+            get
+            {
+                return _imgSrc;
+            }
+            set
+            {
+                _imgSrc = value;
+            }
+        }
 
     }
 
-    public abstract class SausageFactory
+    public abstract class SausageFactory : AbstractFactory
     {
         public abstract Sausage GetSausage();
     }
     public class KielbasaSausageFactory : SausageFactory
     {
+        public override BaseEntity GetEntity()
+        {
+            return new KielbasaSausage("Kielbata", "Polish sausage", 7, "");
+        }
+
         public override Sausage GetSausage()
         {
-            return new KielbasaSausage("Kielbata", "Polish sausage", 7);
+            return new KielbasaSausage("Kielbata", "Polish sausage", 7, "");
         }
     }
     public class ItalianSausageFactory : SausageFactory
     {
+        public override BaseEntity GetEntity()
+        {
+            return new ItalianSausage("Italian", "Pretty sure it is from Italy", 10, "");
+        }
+
         public override Sausage GetSausage()
         {
-            return new ItalianSausage("Italian", "Pretty sure it is from Italy", 10);
+            return new ItalianSausage("Italian", "Pretty sure it is from Italy", 10, "");
         }
     }
     #endregion
@@ -459,7 +556,7 @@ namespace BlazingPizza.Shared.CoreItems
             pizza.SausageTypeList.Sausages = new List<Sausage>();
         }
 
-        public abstract void PrepareDough(Dought dought);
+        public abstract void PrepareDough(BaseEntity dought);
         public abstract void ApplyCheese(Cheese cheese);
         public abstract void ApplySausage(SausageDecorator decorator, Sausage sausage);
         public abstract void AddCondiments();
@@ -501,7 +598,7 @@ namespace BlazingPizza.Shared.CoreItems
 
                     if (decorator is RemoveSausage)
                     {
-                        if (pizza.SausageTypeList.Sausages.Any(x => x.SausageType.Equals(sausage.SausageType)))
+                        if (pizza.SausageTypeList.Sausages.Any(x => x.Name.Equals(sausage.Name)))
                         {
                             pizza.SausageTypeList.Sausages.Remove(sausage);
                             SausageDecorator sausageDecorator = new RemoveSausage(sausage);
@@ -517,9 +614,12 @@ namespace BlazingPizza.Shared.CoreItems
 
         }
 
-        public override void PrepareDough(Dought dought)
+        public override void PrepareDough(BaseEntity dought)
         {
-            pizza.DoughtType = dought;
+            if(dought is Dough)
+            {
+                pizza.DoughType = dought;
+            }
         }
     }
 
@@ -557,9 +657,10 @@ namespace BlazingPizza.Shared.CoreItems
 
         }
 
-        public override string SausageType { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public override string Name { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public override string Description { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public override decimal Price { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public override string ImgSrc { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public override decimal GetCost()
         {
@@ -578,9 +679,10 @@ namespace BlazingPizza.Shared.CoreItems
         {
 
         }
-        public override string SausageType { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public override string Name { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public override string Description { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public override decimal Price { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public override string ImgSrc { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public override decimal GetCost()
         {
