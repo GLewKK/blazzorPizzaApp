@@ -8,6 +8,7 @@
         <div class="dialog-title">
             <h3>Please Select Dough </h3>
         </div>
+        <h1> @SausageCount.Count of @((int)TopicsSize.SausageSize)</h1>
         @foreach (var decorator in decorators)
         {
         <button onclick="@(() => OnApplyDecorator.InvokeAsync(decorator))">@(decorator is AddSausage ? "+" : "-")</button>
@@ -40,11 +41,12 @@
     [Parameter] EventCallback<SausageDecorator> OnApplyDecorator { get; set; }
     [Parameter] EventCallback<Sausage> OnSelectSausage { get; set; }
 
-     void InvokeOnConfirm(Sausage sausage)
+    void InvokeOnConfirm(Sausage sausage)
     {
         ActiveSausage = sausage;
         OnSelectSausage.InvokeAsync(sausage);
     }
 
+    public int Count { get; set; } = 0;
     public Sausage ActiveSausage { get; set; } = null;
 }

@@ -585,9 +585,9 @@ namespace BlazingPizza.Shared.CoreItems
             command.Execute(validator);
 
 
-            if (validator.IsValid(pizza.SausageTypeList.Sausages).HasValue)
+            if (validator.IsValid(pizza.SausageTypeList.Sausages,decorator).HasValue)
             {
-                if (validator.IsValid(pizza.SausageTypeList.Sausages).Value)
+                if (validator.IsValid(pizza.SausageTypeList.Sausages, decorator).Value)
                 {
                     if (decorator is AddSausage)
                     {
@@ -598,17 +598,19 @@ namespace BlazingPizza.Shared.CoreItems
 
                     if (decorator is RemoveSausage)
                     {
-                        if (pizza.SausageTypeList.Sausages.Any(x => x.Name.Equals(sausage.Name)))
+                        var exists = pizza.SausageTypeList.Sausages.FirstOrDefault(x => x.GetType().IsEquivalentTo(sausage.GetType()));
+                        if ( exists != null)
                         {
-                            pizza.SausageTypeList.Sausages.Remove(sausage);
-                            SausageDecorator sausageDecorator = new RemoveSausage(sausage);
+                            pizza.SausageTypeList.Sausages.Remove(exists);
+                            SausageDecorator sausageDecorator = new RemoveSausage(exists);
                             pizza.SausageTypeList.TotalCost = sausageDecorator.GetCost();
                         }
                     }
+                    SausageCount.Count = pizza.SausageTypeList.Sausages.Count;
                 }
                 else
                 {
-                    Console.WriteLine("Value is not valid");
+                    Debug.WriteLine("Value is not valid");
                 }
             }
 
@@ -627,7 +629,15 @@ namespace BlazingPizza.Shared.CoreItems
 
 
     #region Decorators
-    public abstract class SausageDecorator : Sausage
+    public abstract class AbstractDecorator
+    {
+        public virtual decimal GetCost()
+        {
+            return default;
+        }
+
+    }
+    public abstract class SausageDecorator : AbstractDecorator
     {
         private Sausage _sausage;
 
@@ -640,7 +650,7 @@ namespace BlazingPizza.Shared.CoreItems
         {
         }
 
-        public virtual decimal GetCost()
+        public override decimal GetCost()
         {
             return _sausage.Price;
         }
@@ -656,11 +666,6 @@ namespace BlazingPizza.Shared.CoreItems
         {
 
         }
-
-        public override string Name { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public override string Description { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public override decimal Price { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public override string ImgSrc { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public override decimal GetCost()
         {
@@ -679,10 +684,6 @@ namespace BlazingPizza.Shared.CoreItems
         {
 
         }
-        public override string Name { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public override string Description { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public override decimal Price { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public override string ImgSrc { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public override decimal GetCost()
         {
@@ -702,27 +703,28 @@ namespace BlazingPizza.Shared.CoreItems
             nextValidator = validator;
         }
 
-        public abstract bool? IsValid(IEnumerable<object> genericList);
+        public abstract bool? IsValid(IEnumerable<object> genericList, AbstractDecorator abstractDecorator);
     }
 
     public class SausageValidator : Validator
     {
-        public override bool? IsValid(IEnumerable<object> genericList)
+        public override bool? IsValid(IEnumerable<object> genericList, AbstractDecorator abstractDecorator)
         {
-            if (genericList is List<Sausage>)
+            if (genericList is List<Sausage> && abstractDecorator is SausageDecorator)
             {
-                if (genericList.Count() <= 3)
-                {
-                    return true;
-                }
-                else
+                if(abstractDecorator is AddSausage && genericList.Count() >= (int)TopicsSize.SausageSize)
                 {
                     return false;
                 }
+                if(abstractDecorator is RemoveSausage && genericList.Count() == 0)
+                {
+                    return false;
+                }
+                return true;
             }
             else if (nextValidator != null)
             {
-                nextValidator.IsValid(genericList);
+                nextValidator.IsValid(genericList, abstractDecorator);
             }
 
             return null;
@@ -730,7 +732,7 @@ namespace BlazingPizza.Shared.CoreItems
     }
     public class VegetablesValidator : Validator
     {
-        public override bool? IsValid(IEnumerable<object> genericList)
+        public override bool? IsValid(IEnumerable<object> genericList, AbstractDecorator abstractDecorator)
         {
             if (genericList is List<int>)
             {
@@ -773,5 +775,16 @@ namespace BlazingPizza.Shared.CoreItems
         Small,
         Medium,
         Large
+    }
+
+    public enum TopicsSize
+    {
+        SausageSize = 4,
+        VegetablesTotal = 6
+    }
+
+    public static class SausageCount
+    {
+        public static int Count { get; set; } = 0;
     }
 }
