@@ -18,7 +18,8 @@
             {
                 <TemplatedDialog Show="@StateOfOrder.IsTakenDough.Value.Equals(false)">
                     <SelectDoughDialog factoryList="@StateOfOrder.DoughtFactories"
-                                       OnConfirm="@SelectDough">
+                                       OnConfirm="@SelectDough"
+                                       OnCancel="@CancelDoughSelecting">
                     </SelectDoughDialog>
                 </TemplatedDialog>
 
@@ -38,14 +39,12 @@
             }
             else
             {
-                <h3>Please Select Cheese </h3>
-
-                foreach (var cheeseFactory in StateOfOrder.CheeseFactories)
-                {
-                    var cheese = cheeseFactory.GetCheese();
-
-                    <button onclick="@(() => StateOfOrder.SelectCheese(cheese))">Select @cheese.Name</button>
-                }
+                <TemplatedDialog Show="@StateOfOrder.IsSelectedCheese.Value.Equals(false)">
+                    <SelectCheeseDialog factoryList="@StateOfOrder.CheeseFactories"
+                                        OnConfirm="@SelectCheese"
+                                        OnCancel="@CancelCheeseSelecting">
+                    </SelectCheeseDialog>
+                </TemplatedDialog>
             }
         }
 
@@ -58,7 +57,17 @@
             }
             else
             {
-                foreach (var decorator in StateOfOrder.SausageDecorators)
+                <TemplatedDialog Show="@StateOfOrder.IsSelectedSausage.Value.Equals(false)">
+                    <SelectSausageDialog factoryList="@StateOfOrder.SausageFactories"
+                                        decorators="@StateOfOrder.SausageDecorators"
+                                        OnApplyDecorator="@ApplyDecorator"
+                                         OnSelectSausage="@SelectSausage"
+                                        OnConfirm="@FinishSausage"
+                                        OnCancel="@CancelCheeseSelecting">
+                    </SelectSausageDialog>
+                </TemplatedDialog>
+
+                @*foreach (var decorator in StateOfOrder.SausageDecorators)
                 {
                     <button onclick="@(() => StateOfOrder.ApplySausage(decorator))">@(decorator is AddSausage ? "+" : "-")</button>
                 }
@@ -70,7 +79,7 @@
                     <button onclick="@(() => StateOfOrder.SelectSausage(sausage))">@sausage.Name</button>
                 }
 
-                <button onclick="@(() => StateOfOrder.FinishSausageSelection())">Apply</button>
+                <button onclick="@(() => StateOfOrder.FinishSausageSelection())">Apply</button>*@
             }
         }
 
@@ -111,9 +120,49 @@
         Debug.WriteLine(entity.Description);
         StateOfOrder.SelectDough(entity);
     }
+
+    void SelectCheese(BaseEntity cheese)
+    {
+        if(cheese is MozzarellaCheese)
+        {
+            var result = new MozzarellaCheese(cheese.Name, cheese.Description, cheese.Price, cheese.ImgSrc);
+
+
+            StateOfOrder.SelectCheese(result);
+
+
+        }
+        if(cheese is CheddarChesse)
+        {
+            var result = new CheddarChesse(cheese.Name, cheese.Description, cheese.Price, cheese.ImgSrc);
+
+
+            StateOfOrder.SelectCheese(result);
+        }
+    }
+    void ApplyDecorator(SausageDecorator decorator)
+    {
+        StateOfOrder.ApplySausage(decorator);
+    }
+    void SelectSausage(Sausage sausage)
+    {
+        StateOfOrder.SelectSausage(sausage);
+    }
+    void FinishSausage()
+    {
+        StateOfOrder.FinishSausageSelection();
+    }
     void GetStarted()
     {
         StateOfOrder.IsTakenDough = false;
+    }
+    void CancelDoughSelecting()
+    {
+        StateOfOrder.IsTakenDough = null;
+    }
+    void CancelCheeseSelecting()
+    {
+        StateOfOrder.IsSelectedCheese = null;
     }
 }
 

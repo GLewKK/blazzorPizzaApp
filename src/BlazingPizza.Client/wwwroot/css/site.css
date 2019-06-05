@@ -690,5 +690,9 @@ input[type=range] {
 
     .image-container:hover {
         transform: scale(1.1);
-        cursor:pointer;
+        cursor: pointer;
     }
+
+.active{
+    background-color:red;
+}

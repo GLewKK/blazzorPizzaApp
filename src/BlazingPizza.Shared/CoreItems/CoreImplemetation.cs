@@ -306,7 +306,7 @@ namespace BlazingPizza.Shared.CoreItems
             _imgSrc = imgSrc;
         }
         public override string Name
-        {
+        { 
             get
             {
                 return _name;
@@ -359,24 +359,24 @@ namespace BlazingPizza.Shared.CoreItems
     {
         public override Cheese GetCheese()
         {
-            return new MozzarellaCheese("Mozzarella", "Its mozzarella cheese", 8, "");
+            return new MozzarellaCheese("Mozzarella", "Its mozzarella cheese", 8, "/img/cheese/mozzarellaCheese.jpg");
         }
 
         public override BaseEntity GetEntity()
         {
-            return new MozzarellaCheese("Mozzarella", "Its mozzarella cheese", 8, "");
+            return new MozzarellaCheese("Mozzarella", "Its mozzarella cheese", 8, "/img/cheese/mozzarellaCheese.jpg");
         }
     }
     public class CheddarChesseFactory : CheeseFactory
     {
         public override Cheese GetCheese()
         {
-            return new CheddarChesse("Cheddar Chesse", "Description", 9, "");
+            return new CheddarChesse("Cheddar Chesse", "Description", 9, "/img/cheese/cheddarCheese.jpeg");
         }
 
         public override BaseEntity GetEntity()
         {
-            return new CheddarChesse("Cheddar Chesse", "Description", 9, "");
+            return new CheddarChesse("Cheddar Chesse", "Description", 9, "/img/cheese/cheddarCheese.jpeg");
         }
     }
     #endregion
@@ -517,24 +517,24 @@ namespace BlazingPizza.Shared.CoreItems
     {
         public override BaseEntity GetEntity()
         {
-            return new KielbasaSausage("Kielbata", "Polish sausage", 7, "");
+            return new KielbasaSausage("Kielbata", "Polish sausage", 7, "/img/sausage/kielbasaSausage.jpg");
         }
 
         public override Sausage GetSausage()
         {
-            return new KielbasaSausage("Kielbata", "Polish sausage", 7, "");
+            return new KielbasaSausage("Kielbata", "Polish sausage", 7, "/img/sausage/kielbasaSausage.jpg");
         }
     }
     public class ItalianSausageFactory : SausageFactory
     {
         public override BaseEntity GetEntity()
         {
-            return new ItalianSausage("Italian", "Pretty sure it is from Italy", 10, "");
+            return new ItalianSausage("Italian", "Pretty sure it is from Italy", 10, "/img/sausage/italianSausage.jpg");
         }
 
         public override Sausage GetSausage()
         {
-            return new ItalianSausage("Italian", "Pretty sure it is from Italy", 10, "");
+            return new ItalianSausage("Italian", "Pretty sure it is from Italy", 10, "/img/sausage/italianSausage.jpg");
         }
     }
     #endregion

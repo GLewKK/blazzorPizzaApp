@@ -1,0 +1,50 @@
+﻿@using BlazingPizza.Shared.CoreItems
+@inject HttpClient HttpClient
+
+
+
+<div class="dialog-container">
+    <div class="dialog">
+        <div class="dialog-title">
+            <h3>Please Select Dough </h3>
+        </div>
+        @foreach (var decorator in decorators)
+        {
+        <button onclick="@(() => OnApplyDecorator.InvokeAsync(decorator))">@(decorator is AddSausage ? "+" : "-")</button>
+        }
+    <div class="dialog-body">
+        <h3>Please Select Sausage </h3>
+        @foreach (var sausageFactory in factoryList)
+        {
+            var sausage = sausageFactory.GetSausage();
+
+            <a onclick="@(() => InvokeOnConfirm(sausage))" class="image-container  @(ActiveSausage != null && ActiveSausage.GetType().Equals(sausage.GetType()) ? "active" : string.Empty) " style="background-image: url('@sausage.ImgSrc')"></a>
+            <h1>@sausage.Name</h1>
+        }
+        <button onclick="@OnConfirm">Apply</button>
+    </div>
+    </div>
+    <div class="dialog-buttons">
+        <button onclick="@OnCancel">Cancel</button>
+    </div>
+    </div>
+
+
+
+@functions {
+
+    [Parameter] List<SausageFactory> factoryList { get; set; }
+    [Parameter] List<SausageDecorator> decorators { get; set; }
+    [Parameter] EventCallback OnCancel { get; set; }
+    [Parameter] EventCallback OnConfirm { get; set; }
+    [Parameter] EventCallback<SausageDecorator> OnApplyDecorator { get; set; }
+    [Parameter] EventCallback<Sausage> OnSelectSausage { get; set; }
+
+     void InvokeOnConfirm(Sausage sausage)
+    {
+        ActiveSausage = sausage;
+        OnSelectSausage.InvokeAsync(sausage);
+    }
+
+    public Sausage ActiveSausage { get; set; } = null;
+}
