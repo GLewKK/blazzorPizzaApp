@@ -198,12 +198,12 @@ namespace BlazingPizza.Shared.CoreItems
         public override Dough GetDought()
         {
             // din baza se scot datele
-            return new ThinCrust("Thin Crust", "Thinnest Crust", 12, "~/img/Dough/Thin-Crust-Pizza-Dough.jpg");
+            return new ThinCrust("Thin Crust", "Thinnest Crust", 12, "/img/Dough/Thin-Crust-Pizza-Dough.jpg");
         }
 
         public override BaseEntity GetEntity()
         {
-            return new ThinCrust("Thin Crust", "Thinnest Crust", 12, "~/img/Dough/Thin-Crust-Pizza-Dough.jpg");
+            return new ThinCrust("Thin Crust", "Thinnest Crust", 12, "/img/Dough/Thin-Crust-Pizza-Dough.jpg");
         }
     }
     public class FlatBreadFactory : DoughtFactory
@@ -214,12 +214,12 @@ namespace BlazingPizza.Shared.CoreItems
             //var asd = _client.GetJsonAsync<DbDough>("doughs/1");
             Debug.WriteLine("Testam API");
             //Debug.WriteLine(asd.Result.Name);
-            return new FlatBreadCrust("Flat Bread", "Very flat..", 15, "~/img/Dough/flatbreadcrust-dough.jpg");
+            return new FlatBreadCrust("Flat Bread", "Very flat..", 15, "/img/Dough/flatbreadcrust-dough.jpg");
         }
 
         public override BaseEntity GetEntity()
         {
-            return new FlatBreadCrust("Flat Bread", "Very flat..", 15, "~/img/Dough/flatbreadcrust-dough.jpg");
+            return new FlatBreadCrust("Flat Bread", "Very flat..", 15, "/img/Dough/flatbreadcrust-dough.jpg");
         }
     }
 

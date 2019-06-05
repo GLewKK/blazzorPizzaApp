@@ -63,7 +63,7 @@ namespace BlazzingPizza.Client
             {
                 Builder.PrepareDough(dought);
                 IsTakenDough = true;
-                SelectedDough = dought.Description;
+                SelectedDough = dought.Name;
 
                 IsSelectedCheese = false;
             }

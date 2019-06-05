@@ -378,7 +378,8 @@ form {
 
 .dialog-body {
     flex-grow: 1;
-    padding: 0.5rem 3rem 1rem 0;
+    padding: 20px;
+    display: flex;
 }
 
 .dialog-buttons {
@@ -678,4 +679,16 @@ input[type=range] {
     position: relative;
     background-size: contain;
     background-repeat: no-repeat;
+    display: inline-block;
+    width: 200px;
+    /*Hover Transform effects*/
+    vertical-align: middle;
+    transition-duration: 0.3s;
+    transition-property: transform;
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0);
 }
+
+    .image-container:hover {
+        transform: scale(1.1);
+        cursor:pointer;
+    }

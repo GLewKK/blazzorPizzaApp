@@ -12,8 +12,8 @@
                 @foreach (var item in factoryList)
                 {
                     var entity = item.GetEntity();
-                    <div class="image-container" style="background-image: url('@entity.ImgSrc')"></div>
-                    <button onclick="@(() => OnConfirm.InvokeAsync(entity))">@entity.Name</button>
+                    <a onclick="@(() => OnConfirm.InvokeAsync(entity))" class="image-container" style="background-image: url('@entity.ImgSrc')"></a>
+                    <h1>@entity.Name</h1>
                 }
             </div>
         </div>
