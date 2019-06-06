@@ -1,0 +1,17 @@
+diff a/src/BlazingPizza.Client/wwwroot/css/site.css b/src/BlazingPizza.Client/wwwroot/css/site.css	(rejected hunks)
+@@ -375,13 +375,14 @@
+         text-transform: uppercase;
+         line-height: 1.3rem;
+     }
+ 
+ .dialog-body {
+     flex-grow: 1;
+-    padding: 0.5rem 3rem 1rem 0;
++    padding: 20px;
++    display: flex;
+ }
+ 
+ .dialog-buttons {
+     height: 4rem;
+     flex-shrink: 0;
+     display: flex;

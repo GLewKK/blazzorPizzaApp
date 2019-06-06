@@ -3,31 +3,33 @@
 
 
 
-<div class="dialog-container">
-    <div class="dialog">
-        <div class="dialog-title">
-            <h3>Please Select Dough </h3>
-        </div>
-        <h1> @SausageCount.Count of @((int)TopicsSize.SausageSize)</h1>
-        @foreach (var decorator in decorators)
-        {
-        <button onclick="@(() => OnApplyDecorator.InvokeAsync(decorator))">@(decorator is AddSausage ? "+" : "-")</button>
-        }
-    <div class="dialog-body">
-        <h3>Please Select Sausage </h3>
-        @foreach (var sausageFactory in factoryList)
-        {
-            var sausage = sausageFactory.GetSausage();
+    <div class="dialog-container">
+        <div class="dialog">
+            <div class="dialog-title">
+                <h3> <span class="iconify" data-icon="oi-list-rich" data-inline="true"></span> Please Select Dough </h3>
+            </div>
+            <h1> @SausageCount.Count of @((int)TopicsSize.SausageSize)</h1>
 
-            <a onclick="@(() => InvokeOnConfirm(sausage))" class="image-container  @(ActiveSausage != null && ActiveSausage.GetType().Equals(sausage.GetType()) ? "active" : string.Empty) " style="background-image: url('@sausage.ImgSrc')"></a>
-            <h1>@sausage.Name</h1>
-        }
-        <button onclick="@OnConfirm">Apply</button>
-    </div>
-    </div>
-    <div class="dialog-buttons">
-        <button onclick="@OnCancel">Cancel</button>
-    </div>
+            <div class="d-inline-block centered">
+                @foreach (var decorator in decorators)
+                {
+                    <button class="btn btn-primary plusminusbtn" onclick="@(() => OnApplyDecorator.InvokeAsync(decorator))"> @(decorator is AddSausage ? "+" : "-")</button>
+                }
+            </div>
+                <div class="dialog-body">
+                    <h3>Please Select Sausage </h3>
+                    @foreach (var sausageFactory in factoryList)
+                    {
+                        var sausage = sausageFactory.GetSausage();
+
+                        <a onclick="@(() => InvokeOnConfirm(sausage))" class="image-container  @(ActiveSausage != null && ActiveSausage.GetType().Equals(sausage.GetType()) ? "activeToppig" : string.Empty) " style="background-image: url('@sausage.ImgSrc')"></a>
+                        <h1>@sausage.Name</h1>
+                    }
+                </div>
+                <div class="dialog-buttons">
+                    <button class="centered btn btn-success" onclick="@OnConfirm">Apply</button>
+                </div>
+            </div>
     </div>
 
 

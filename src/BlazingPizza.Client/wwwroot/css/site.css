@@ -378,8 +378,7 @@ form {
 
 .dialog-body {
     flex-grow: 1;
-    padding: 20px;
-    display: flex;
+    padding: 0.5rem 3rem 1rem 0;
 }
 
 .dialog-buttons {
@@ -675,9 +674,9 @@ input[type=range] {
     }
 }
 .image-container {
-    height: 10rem;
+    height: 130px;
     position: relative;
-    background-size: contain;
+    background-size: cover;
     background-repeat: no-repeat;
     display: inline-block;
     width: 200px;
@@ -686,6 +685,8 @@ input[type=range] {
     transition-duration: 0.3s;
     transition-property: transform;
     box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+    border-radius: 8px;
+    border: solid 2px transparent;
 }
 
     .image-container:hover {
@@ -693,6 +694,12 @@ input[type=range] {
         cursor: pointer;
     }
 
-.active{
-    background-color:red;
+.activeToppig{
+    border: solid 2px red;
+}
+.centered{
+    margin: auto;
+}
+.plusminusbtn{
+    width:45px;
 }

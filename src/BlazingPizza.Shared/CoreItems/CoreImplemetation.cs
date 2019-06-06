@@ -589,23 +589,28 @@ namespace BlazingPizza.Shared.CoreItems
             {
                 if (validator.IsValid(pizza.SausageTypeList.Sausages, decorator).Value)
                 {
-                    if (decorator is AddSausage)
-                    {
-                        pizza.SausageTypeList.Sausages.Add(sausage);
-                        SausageDecorator sausageDecorator = new AddSausage(sausage);
-                        pizza.SausageTypeList.TotalCost = sausageDecorator.GetCost();
-                    }
 
-                    if (decorator is RemoveSausage)
+                    switch (decorator)
                     {
-                        var exists = pizza.SausageTypeList.Sausages.FirstOrDefault(x => x.GetType().IsEquivalentTo(sausage.GetType()));
-                        if ( exists != null)
-                        {
-                            pizza.SausageTypeList.Sausages.Remove(exists);
-                            SausageDecorator sausageDecorator = new RemoveSausage(exists);
-                            pizza.SausageTypeList.TotalCost = sausageDecorator.GetCost();
-                        }
+                        case AddSausage add:
+                            pizza.SausageTypeList.Sausages.Add(sausage);
+                            pizza.SausageTypeList.TotalCost = new AddSausage(sausage).GetCost();
+                            break;
+                        case RemoveSausage rem:
+                            var exists = pizza.SausageTypeList.Sausages.FirstOrDefault(x => x.GetType().IsEquivalentTo(sausage.GetType()));
+                            if (exists != null)
+                            {
+                                pizza.SausageTypeList.Sausages.Remove(exists);
+                                pizza.SausageTypeList.TotalCost = new RemoveSausage(exists).GetCost();
+                            }
+                            break;
+                        default:
+                            Debug.WriteLine("Unknoun Decorator");
+                            break;
+                        case null:
+                            throw new ArgumentNullException(nameof(decorator));
                     }
+                    
                     SausageCount.Count = pizza.SausageTypeList.Sausages.Count;
                 }
                 else
