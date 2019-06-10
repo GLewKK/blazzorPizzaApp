@@ -29,6 +29,8 @@ namespace BlazzingPizza.Client
 
         public string SelectedCheese { get; set; }
 
+        public bool? IsSelectingSizeAndPiper { get; set; } = null;
+
         public bool? IsPizzaReady { get; set; } = null;
 
         public SausageDecorator SelectedDecorator { get; set; }
@@ -133,7 +135,7 @@ namespace BlazzingPizza.Client
         }
         public void ShowAnSelectError()
         {
-            Debug.WriteLine("Eroor naxui");
+            Debug.WriteLine("Eroor");
         }
 
         public void FinishSausageSelection()
@@ -141,7 +143,7 @@ namespace BlazzingPizza.Client
 
             IsSelectedSausage = true;
 
-            IsPizzaReady = false;
+            IsSelectingSizeAndPiper = false;
 
         }
     }

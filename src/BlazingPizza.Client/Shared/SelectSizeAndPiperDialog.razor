@@ -1,0 +1,68 @@
+﻿@using System.Diagnostics
+@using BlazingPizza.Shared.CoreItems
+@inject HttpClient HttpClient
+
+
+
+<div class="dialog-container">
+    <div class="dialog">
+        <div class="dialog-title">
+            <h3>Please Select Dough </h3>
+        </div>
+        <div class="dialog-body">
+            @foreach (var item in listofSizes)
+            {
+                <button onclick="@(() => @SelectSizes(item))">@item</button>
+            }
+
+            <div>
+                <label>With Red Peper</label>
+                <input type="checkbox" bind="@IsRedPeper" />
+            </div>
+        </div>
+        <div class="dialog-buttons">
+            <button onclick="@OnConfirm">Confirm</button>
+        </div>
+    </div>
+    </div>
+
+
+
+@functions {
+
+
+    bool IsRedPeper { get; set; } = false;
+    Size selectedSize { get; set; }
+    List<string> listofSizes { get; set; }
+
+    [Parameter] EventCallback<Size> SelectSize { get; set; }
+    [Parameter] EventCallback<bool> SelectPiper { get; set; }
+    [Parameter] EventCallback OnCancel { get; set; }
+    [Parameter] EventCallback OnConfirm { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        listofSizes  = ((Size[])Enum.GetValues(typeof(Size))).Select(x => x.ToString()).ToList();
+    }
+
+    void SelectSizes(string selectedString)
+    {
+        Debug.WriteLine(selectedString.ToString());
+        Debug.WriteLine(IsRedPeper.ToString());
+        selectedSize = (Size)Enum.Parse(typeof(Size),selectedString,true);
+
+        SelectSize.InvokeAsync(selectedSize);
+        @if (IsRedPeper)
+        {
+            SelectPiper.InvokeAsync(IsRedPeper);
+        }
+    }
+
+    //void Confirm()
+    //{
+    //    if(selectedSize != null)
+    //    {
+    //        OnConfirm();
+    //    }
+    //}
+}

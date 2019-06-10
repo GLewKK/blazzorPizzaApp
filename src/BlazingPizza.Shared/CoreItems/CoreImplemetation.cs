@@ -560,6 +560,7 @@ namespace BlazingPizza.Shared.CoreItems
         public abstract void ApplyCheese(Cheese cheese);
         public abstract void ApplySausage(SausageDecorator decorator, Sausage sausage);
         public abstract void AddCondiments();
+        public abstract void SelectSize(Size size);
 
     }
 
@@ -627,6 +628,11 @@ namespace BlazingPizza.Shared.CoreItems
             {
                 pizza.DoughType = dought;
             }
+        }
+
+        public override void SelectSize(Size size)
+        {
+            pizza.Size = size;
         }
     }
 

@@ -52,34 +52,36 @@
         {
             @if (StateOfOrder.IsSelectedSausage.Value)
             {
-                <h1>Done!</h1>
+                <h1>Selected </h1>
 
             }
             else
             {
                 <TemplatedDialog Show="@StateOfOrder.IsSelectedSausage.Value.Equals(false)">
                     <SelectSausageDialog factoryList="@StateOfOrder.SausageFactories"
-                                        decorators="@StateOfOrder.SausageDecorators"
-                                        OnApplyDecorator="@ApplyDecorator"
+                                         decorators="@StateOfOrder.SausageDecorators"
+                                         OnApplyDecorator="@ApplyDecorator"
                                          OnSelectSausage="@SelectSausage"
-                                        OnConfirm="@FinishSausage"
-                                        OnCancel="@CancelCheeseSelecting">
+                                         OnConfirm="@FinishSausage"
+                                         OnCancel="@CancelCheeseSelecting">
                     </SelectSausageDialog>
                 </TemplatedDialog>
-
-                @*foreach (var decorator in StateOfOrder.SausageDecorators)
-                {
-                    <button onclick="@(() => StateOfOrder.ApplySausage(decorator))">@(decorator is AddSausage ? "+" : "-")</button>
-                }
-                <h3>Please Select Sausage </h3>
-                foreach (var sausageFactory in StateOfOrder.SausageFactories)
-                {
-                    var sausage = sausageFactory.GetSausage();
-
-                    <button onclick="@(() => StateOfOrder.SelectSausage(sausage))">@sausage.Name</button>
-                }
-
-                <button onclick="@(() => StateOfOrder.FinishSausageSelection())">Apply</button>*@
+            }
+        }
+        @if (StateOfOrder.IsSelectingSizeAndPiper.HasValue)
+        {
+            @if (StateOfOrder.IsSelectingSizeAndPiper.Value)
+            {
+                <h1>Selected</h1>
+            }
+            else
+            {
+                <TemplatedDialog Show="@StateOfOrder.IsSelectingSizeAndPiper.Equals(false)">
+                    <SelectSizeAndPiperDialog OnConfirm="@ConfirmSelectingSize"
+                                              SelectPiper="@SelectPiper"
+                                              SelectSize="@SelectSize">
+                    </SelectSizeAndPiperDialog>
+                </TemplatedDialog>
             }
         }
 
@@ -92,6 +94,8 @@
                 <p>@StateOfOrder.Pizza.CheeseType.Description</p>
                 <p>@StateOfOrder.Pizza.DoughType.Name</p>
                 <p>@StateOfOrder.Pizza.DoughType.Description</p>
+                <p>@StateOfOrder.Pizza.Size.ToString() Size</p>
+                <p>@((StateOfOrder.Pizza.IsRedPeper) ? "With red peper" : "Without red peper")</p>
 
                 @foreach (var item in StateOfOrder.Pizza.SausageTypeList.Sausages)
                 {
@@ -105,6 +109,7 @@
                 <button onclick="@StateOfOrder.GetPizza">Get the Pizza</button>
             }
         }
+
     </div>
 
 @functions{
@@ -163,6 +168,25 @@
     void CancelCheeseSelecting()
     {
         StateOfOrder.IsSelectedCheese = null;
+    }
+
+    void SelectSize(Size size)
+    {
+        StateOfOrder.Builder.SelectSize(size);
+
+    }
+
+    void SelectPiper(bool isPiper)
+    {
+        if (isPiper)
+        {
+            StateOfOrder.Builder.AddCondiments();
+        }
+    }
+    void ConfirmSelectingSize()
+    {
+        StateOfOrder.IsSelectingSizeAndPiper = true;
+        StateOfOrder.IsPizzaReady = false;
     }
 }
 
